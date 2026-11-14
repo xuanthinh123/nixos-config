@@ -18,12 +18,7 @@ in
     };
 
     # Real-time nix-index database for rapid package searching and command-not-found integration
-    programs.nix-index = {
-      enable = true;
-      enableBashIntegration = true;
-      enableZshIntegration = true;
-      enableFishIntegration = true;
-    };
+    programs.nix-index.enable = true;
 
     # Cross-shell modern prompt
     programs.starship = {
