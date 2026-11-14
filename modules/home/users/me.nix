@@ -104,8 +104,8 @@
   # Git VCS configuration
   programs.git = {
     enable = true;
-    userName = "me";
-    userEmail = "me@localhost";
+    userName = "xuanthinh123";
+    userEmail = "thinhzhv123@gmail.com";
     extraConfig = {
       init.defaultBranch = "main";
       fetch.prune = true;
