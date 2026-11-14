@@ -55,7 +55,7 @@ POWER_MOD="${PROJECT_ROOT}/modules/hardware/power.nix"
 assert_file_exists "T2.03.1" "${POWER_MOD}" "Power module must exist"
 if [[ -f "${POWER_MOD}" ]]; then
     assert_file_contains "T2.03.2" "${POWER_MOD}" "lib.mkIf cfg.s3Sleep" "S3 deep sleep settings must be guarded by cfg.s3Sleep"
-    assert_file_contains "T2.03.3" "${POWER_MOD}" "AllowSuspend = \"yes\";" "Suspend must remain allowed"
+    assert_file_contains "T2.03.3" "${POWER_MOD}" "AllowSuspend=yes" "Suspend must remain allowed"
 fi
 
 # -----------------------------------------------------------------------------

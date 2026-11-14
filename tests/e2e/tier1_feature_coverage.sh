@@ -98,7 +98,7 @@ POWER_FILE="${PROJECT_ROOT}/modules/hardware/power.nix"
 assert_file_exists "T1.06.1" "${POWER_FILE}" "Power management module must exist"
 if [[ -f "${POWER_FILE}" ]]; then
     assert_file_contains "T1.06.2" "${POWER_FILE}" 'mem_sleep_default=deep' "Kernel cmdline must force mem_sleep_default=deep for ACPI S3"
-    assert_file_contains "T1.06.3" "${POWER_FILE}" 'MemorySleepMode = "deep";' "systemd-sleep must be configured for deep sleep mode"
+    assert_file_contains "T1.06.3" "${POWER_FILE}" 'SuspendState=mem' "systemd-sleep must be configured for deep sleep mode"
 fi
 
 # -----------------------------------------------------------------------------

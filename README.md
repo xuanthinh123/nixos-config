@@ -78,7 +78,8 @@ nixos_config/
 | Host Configuration | Target Machine | Graphics Stack | Sleep Mode | Display Manager | Default State |
 |-------------------|----------------|----------------|------------|-----------------|---------------|
 | `nixosConfigurations.me` | Acer Aspire A515-58GM | Intel UHD (`PCI:0:2:0`) + NVIDIA RTX 2050 (`PCI:1:0:0`) with proprietary driver & PRIME offload | S3 Deep Sleep (`mem_sleep_default=deep`) | SDDM (Wayland) | Production / Tailored |
-| `nixosConfigurations.default` | Generic PC / VM / iGPU Laptop | Non-NVIDIA / Mesa open-source stack | S3 Deep Sleep | SDDM Wayland | Fleet Baseline |
+| `nixosConfigurations.vm` | Virtual Machine (QEMU/KVM, VirtualBox, VMware) | Virtualized 3D / Mesa (qemu-guest, spice-vdagent) | Standard VM ACPI (s3Sleep disabled) | SDDM (Wayland) | Dedicated VM Profile |
+| `nixosConfigurations.default` | Generic PC / iGPU Laptop | Non-NVIDIA / Mesa open-source stack | Standard Desktop (s3Sleep disabled) | SDDM Wayland | Fleet Baseline |
 
 ---
 

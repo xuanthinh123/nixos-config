@@ -48,6 +48,9 @@
     # Generic fleet baseline configuration for rapid deployment to new PCs / VMs
     nixosConfigurations.default = mkHost { hostName = "default"; };
 
+    # Dedicated Virtual Machine configuration (QEMU/KVM, VirtualBox, VMware)
+    nixosConfigurations.vm = mkHost { hostName = "vm"; };
+
     # Primary user machine configuration (Acer Aspire A515-58GM with Intel + NVIDIA RTX 2050)
     nixosConfigurations.me = mkHost { hostName = "me"; };
   };

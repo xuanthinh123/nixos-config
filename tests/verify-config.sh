@@ -186,7 +186,7 @@ fi
 
 # 4.3: S3 deep sleep enforcement
 if grep -Fq '"mem_sleep_default=deep"' "${CONFIG_DIR}/modules/hardware/power.nix" && \
-   grep -Fq 'MemorySleepMode = "deep";' "${CONFIG_DIR}/modules/hardware/power.nix"; then
+   grep -Fq 'SuspendState=mem' "${CONFIG_DIR}/modules/hardware/power.nix"; then
   pass "ACPI S3 deep sleep enforcement verified in kernelParams and systemd.sleep."
 else
   fail "S3 deep sleep parameters missing or incorrect in modules/hardware/power.nix!"

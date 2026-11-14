@@ -11,14 +11,12 @@ in
     # Instruct Linux kernel command line to select deep sleep (ACPI S3) as default
     boot.kernelParams = [ "mem_sleep_default=deep" ];
 
-    # Configure systemd sleep settings using RFC 0042 structured configuration
-    systemd.sleep.settings.Sleep = {
-      # Prioritize S3 deep sleep (Suspend-to-RAM) over s2idle modern standby
-      MemorySleepMode = "deep";
-      AllowSuspend = "yes";
-      AllowHibernation = "yes";
-      # Graceful fallback: transition to hibernation if suspended for extended periods
-      HibernateDelaySec = "30m";
-    };
+    # Configure systemd sleep settings for deep sleep (Suspend-to-RAM)
+    systemd.sleep.extraConfig = ''
+      AllowSuspend=yes
+      AllowHibernation=yes
+      HibernateDelaySec=30m
+      SuspendState=mem
+    '';
   };
 }

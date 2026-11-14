@@ -18,7 +18,7 @@
     hardware = {
       # Generic fleet baseline defaults to non-NVIDIA (Intel/AMD/VM)
       nvidia.enable = false;
-      power.s3Sleep = true;
+      power.s3Sleep = false; # Generic baseline disables laptop ACPI S3 sleep
     };
 
     desktop = {
