@@ -17,6 +17,11 @@ in
       };
     };
 
+    # Local LLM service daemon (Ollama)
+    services.ollama = {
+      enable = true;
+    };
+
     # Real-time nix-index database for rapid package searching and command-not-found integration
     programs.nix-index.enable = true;
 
