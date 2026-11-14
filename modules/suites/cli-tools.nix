@@ -12,7 +12,7 @@ in
     programs.nh = {
       enable = true;
       clean = {
-        enable = true;
+        enable = false; # Keep timer in nix.gc to prevent conflict with nh.clean
         extraArgs = "--keep-since 7d --keep 3";
       };
     };

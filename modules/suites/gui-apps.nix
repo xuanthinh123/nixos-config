@@ -34,7 +34,20 @@ in
 
       # Office & Productivity (LTS still branch)
       libreoffice-qt6-still
-      simplenote
+
+      # Simplenote launcher (matching surveyed Flatpak com.simplenote.Simplenote)
+      (pkgs.writeShellScriptBin "simplenote" ''
+        if command -v flatpak >/dev/null 2>&1; then
+          if ! flatpak info com.simplenote.Simplenote >/dev/null 2>&1; then
+            echo "Installing Simplenote from Flathub..."
+            flatpak install -y flathub com.simplenote.Simplenote
+          fi
+          exec flatpak run com.simplenote.Simplenote "$@"
+        else
+          echo "Error: Flatpak is required to run Simplenote." >&2
+          exit 1
+        fi
+      '')
 
       # Virtualization and Utilities from host survey
       gnome-boxes           # Simple VM manager matching Flatpak Boxes
