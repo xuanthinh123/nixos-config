@@ -1,0 +1,13 @@
+# Nix build artifacts
+result
+result-*
+
+# Test reports
+tests/e2e/reports/
+*.tap
+
+# Editor and temporary files
+.direnv/
+*.swp
+*~
+.DS_Store
