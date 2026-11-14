@@ -67,7 +67,7 @@
       ll = "eza -la --icons";
       cat = "bat";
       find = "fd";
-      grep = "ripgrep";
+      grep = "rg";
     };
   };
 
@@ -81,6 +81,8 @@
       ls = "eza --icons";
       ll = "eza -la --icons";
       cat = "bat";
+      find = "fd";
+      grep = "rg";
     };
   };
 
@@ -91,6 +93,8 @@
       ls = "eza --icons";
       ll = "eza -la --icons";
       cat = "bat";
+      find = "fd";
+      grep = "rg";
     };
   };
 

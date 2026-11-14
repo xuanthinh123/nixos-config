@@ -28,9 +28,10 @@ in
     environment.systemPackages = with pkgs; [
       # Flatseal launcher (matching surveyed Flatpak com.github.tchx84.Flatseal)
       (pkgs.writeShellScriptBin "flatseal" ''
-        # Priority 1: Check for native Nix binary first
-        if [ -x "$(command -v flatseal 2>/dev/null)" ] && [ "$(command -v flatseal)" != "$0" ]; then
-          exec flatseal "$@"
+        # Priority 1: Check for native Nix binary first outside this wrapper
+        TARGET_BIN="$(type -a -p flatseal 2>/dev/null | grep -vFx "$0" | head -n1)"
+        if [ -n "$TARGET_BIN" ] && [ -x "$TARGET_BIN" ]; then
+          exec "$TARGET_BIN" "$@"
         fi
 
         # Priority 2: Fallback to Flatpak Flathub if native Nix package is not installed
