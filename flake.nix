@@ -50,8 +50,5 @@
 
     # Primary user machine configuration (Acer Aspire A515-58GM with Intel + NVIDIA RTX 2050)
     nixosConfigurations.me = mkHost { hostName = "me"; };
-
-    # Alias for me profile matching surveyed host name
-    nixosConfigurations."aurora-laptop" = self.nixosConfigurations.me;
   };
 }

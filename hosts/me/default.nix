@@ -11,7 +11,7 @@
 
   custom = {
     device = {
-      hostName = "aurora-laptop";
+      hostName = "me";
       type = "laptop";
     };
 

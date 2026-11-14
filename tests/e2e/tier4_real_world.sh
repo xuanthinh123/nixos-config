@@ -178,7 +178,7 @@ if [[ -f "${HOST_DEFAULT_FILE}" && -f "${HOST_ME_FILE}" ]]; then
     assert_file_contains "T4.04.3" "${HOST_DEFAULT_FILE}" 'gaming = false;' "Default fleet host leaves gaming disabled by default"
 
     # Me host must be tailored
-    assert_file_contains "T4.04.4" "${HOST_ME_FILE}" 'hostName = "aurora-laptop";' "Me host must retain laptop hostname"
+    assert_file_contains "T4.04.4" "${HOST_ME_FILE}" 'hostName = "me";' "Me host must have hostname me"
     assert_file_contains "T4.04.5" "${HOST_ME_FILE}" 'nvidia = {' "Me host must configure NVIDIA GPU"
     assert_file_contains "T4.04.6" "${HOST_ME_FILE}" 'gaming = true;' "Me host must enable gaming suite"
     assert_file_contains "T4.04.7" "${HOST_ME_FILE}" 'displayManager = "plasma-login-manager";' "Me host must use plasma-login-manager"

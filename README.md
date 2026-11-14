@@ -30,12 +30,9 @@ nixos_config/
 │   ├── default/                       # Minimal generic fleet baseline (iGPU / AMD / VM)
 │   │   ├── default.nix                # Host-level feature selections & defaults
 │   │   └── hardware-configuration.nix # Minimal ext4/UEFI storage definition
-│   ├── me/                            # Primary host profile (Acer Aspire A515-58GM)
-│   │   ├── default.nix                # Enables NVIDIA proprietary, S3 sleep, KDE, suites
-│   │   └── hardware-configuration.nix # Pure Linux Btrfs subvolumes & surveyed hardware
-│   └── aurora-laptop/                 # Hostname alias importing hosts/me
-│       ├── default.nix
-│       └── hardware-configuration.nix
+│   └── me/                            # Primary host profile (Acer Aspire A515-58GM)
+│       ├── default.nix                # Enables NVIDIA proprietary, S3 sleep, KDE, suites
+│       └── hardware-configuration.nix # Pure Linux Btrfs subvolumes & surveyed hardware
 ├── modules/                           # Reusable modular library
 │   ├── core/                          # Fundamental system baseline
 │   │   ├── default.nix                # Core module aggregator
@@ -81,7 +78,6 @@ nixos_config/
 | Host Configuration | Target Machine | Graphics Stack | Sleep Mode | Display Manager | Default State |
 |-------------------|----------------|----------------|------------|-----------------|---------------|
 | `nixosConfigurations.me` | Acer Aspire A515-58GM | Intel UHD (`PCI:0:2:0`) + NVIDIA RTX 2050 (`PCI:1:0:0`) with proprietary driver & PRIME offload | S3 Deep Sleep (`mem_sleep_default=deep`) | Plasma Login Manager (`plasmalogin`) | Production / Tailored |
-| `nixosConfigurations."aurora-laptop"` | Acer Aspire A515-58GM | (Alias pointing directly to `me`) | S3 Deep Sleep | Plasma Login Manager | Compatibility Alias |
 | `nixosConfigurations.default` | Generic PC / VM / iGPU Laptop | Non-NVIDIA / Mesa open-source stack | S3 Deep Sleep | SDDM Wayland | Fleet Baseline |
 
 ---

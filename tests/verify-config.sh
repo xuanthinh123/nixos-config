@@ -36,8 +36,6 @@ REQUIRED_FILES=(
   "hosts/default/hardware-configuration.nix"
   "hosts/me/default.nix"
   "hosts/me/hardware-configuration.nix"
-  "hosts/aurora-laptop/default.nix"
-  "hosts/aurora-laptop/hardware-configuration.nix"
   "modules/core/default.nix"
   "modules/core/options.nix"
   "modules/core/nix.nix"
