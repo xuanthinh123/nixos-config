@@ -1,5 +1,5 @@
 # modules/desktop/display-manager.nix
-# Modular display manager configuration supporting Plasma Login Manager (host parity) and SDDM fallback.
+# Modular display manager configuration using standard SDDM with Wayland greeter for KDE Plasma 6.
 
 { config, lib, pkgs, ... }:
 
@@ -9,12 +9,7 @@ in
 {
   config = lib.mkIf cfg.enable {
     services.displayManager = {
-      # Target host Aurora OS uses plasma-login-manager (/usr/bin/plasmalogin)
-      plasma-login-manager = lib.mkIf (cfg.displayManager == "plasma-login-manager") {
-        enable = true;
-      };
-
-      # SDDM display manager with Wayland greeter enabled as a standardized fleet fallback
+      # Standard SDDM display manager with Wayland greeter for KDE Plasma 6
       sddm = lib.mkIf (cfg.displayManager == "sddm") {
         enable = true;
         wayland.enable = true;

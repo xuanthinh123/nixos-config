@@ -34,8 +34,8 @@
     desktop = {
       enable = true;
       environment = "plasma6";
-      # Target host uses Plasma Login Manager (/usr/bin/plasmalogin)
-      displayManager = "plasma-login-manager";
+      # Standard SDDM display manager on Wayland for KDE Plasma 6
+      displayManager = "sddm";
     };
 
     suites = {

@@ -223,12 +223,12 @@ else
   fail "Tiered software or discovery tools missing in suites or services!"
 fi
 
-# 4.7: Display manager abstraction (plasma-login-manager & sddm)
-if grep -Fq "plasma-login-manager" "${CONFIG_DIR}/modules/desktop/display-manager.nix" && \
-   grep -Fq "sddm" "${CONFIG_DIR}/modules/desktop/display-manager.nix"; then
-  pass "Display manager modularity verified (plasma-login-manager matching host, SDDM fallback)."
+# 4.7: Display manager configuration (SDDM with Wayland greeter)
+if grep -Fq "sddm" "${CONFIG_DIR}/modules/desktop/display-manager.nix" && \
+   grep -Fq "wayland.enable = true;" "${CONFIG_DIR}/modules/desktop/display-manager.nix"; then
+  pass "Display manager verified (SDDM with Wayland greeter for KDE Plasma 6)."
 else
-  fail "Display manager modularity missing in modules/desktop/display-manager.nix!"
+  fail "Display manager SDDM configuration missing in modules/desktop/display-manager.nix!"
 fi
 
 # 4.8: Home Manager configuration

@@ -69,8 +69,8 @@ if [[ -f "${OPTIONS_MOD}" ]]; then
     assert_file_contains "T2.04.2" "${OPTIONS_MOD}" "lib.types.enum" "Constrained options must use lib.types.enum"
     assert_file_contains "T2.04.3" "${OPTIONS_MOD}" "lib.types.str" "String options must use lib.types.str"
     assert_file_contains "T2.04.4" "${OPTIONS_MOD}" "lib.types.int" "Integer thresholds must use lib.types.int"
-    # Verify display manager enum includes both plasma-login-manager and sddm
-    assert_file_contains "T2.04.5" "${OPTIONS_MOD}" '"plasma-login-manager" "sddm"' "Display manager option must support plasma-login-manager and sddm"
+    # Verify display manager enum includes sddm
+    assert_file_contains "T2.04.5" "${OPTIONS_MOD}" '"sddm"' "Display manager option must support sddm"
 fi
 
 # -----------------------------------------------------------------------------
@@ -87,16 +87,15 @@ if [[ -f "${NVIDIA_MOD}" ]]; then
 fi
 
 # -----------------------------------------------------------------------------
-# Test 2.06: Display Manager Fallback Architecture
-# Verifies display-manager.nix handles both plasma-login-manager and sddm
-# without configuration conflict.
+# Test 2.06: Display Manager Architecture
+# Verifies display-manager.nix configures SDDM with Wayland greeter properly
 # -----------------------------------------------------------------------------
-log_info "Running Test 2.06: Display Manager Fallback Architecture..."
+log_info "Running Test 2.06: Display Manager Architecture..."
 DM_MOD="${PROJECT_ROOT}/modules/desktop/display-manager.nix"
 assert_file_exists "T2.06.1" "${DM_MOD}" "Display manager module must exist"
 if [[ -f "${DM_MOD}" ]]; then
-    assert_file_contains "T2.06.2" "${DM_MOD}" "cfg.displayManager == \"plasma-login-manager\"" "Must have condition for plasma-login-manager"
-    assert_file_contains "T2.06.3" "${DM_MOD}" "cfg.displayManager == \"sddm\"" "Must have condition for sddm fallback"
+    assert_file_contains "T2.06.2" "${DM_MOD}" "sddm = lib.mkIf (cfg.displayManager == \"sddm\")" "Must configure sddm with displayManager guard"
+    assert_file_contains "T2.06.3" "${DM_MOD}" "sddm-kcm" "Must install SDDM KDE Control Module"
 fi
 
 # -----------------------------------------------------------------------------

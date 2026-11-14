@@ -132,15 +132,14 @@ if [[ -f "${KDE_FILE}" ]]; then
 fi
 
 # -----------------------------------------------------------------------------
-# Test 1.09: Display Manager Modularity (Plasma Login Manager / SDDM)
-# Requirements: Follow-up user correction 2026-11-14T12:55:20Z, PROJECT.md Item 15
+# Test 1.09: Display Manager Configuration (SDDM Wayland)
 # -----------------------------------------------------------------------------
-log_info "Running Test 1.09: Display Manager Modularity..."
+log_info "Running Test 1.09: Display Manager Configuration..."
 DM_FILE="${PROJECT_ROOT}/modules/desktop/display-manager.nix"
 assert_file_exists "T1.09.1" "${DM_FILE}" "Display manager module must exist"
 if [[ -f "${DM_FILE}" ]]; then
-    assert_file_contains "T1.09.2" "${DM_FILE}" "plasma-login-manager" "Plasma Login Manager option or binding must be supported"
-    assert_file_contains "T1.09.3" "${DM_FILE}" "sddm" "SDDM display manager fallback must be supported"
+    assert_file_contains "T1.09.2" "${DM_FILE}" "sddm" "SDDM display manager must be supported"
+    assert_file_contains "T1.09.3" "${DM_FILE}" "wayland.enable = true;" "SDDM Wayland greeter must be enabled"
 fi
 
 # -----------------------------------------------------------------------------

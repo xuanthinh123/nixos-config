@@ -69,9 +69,9 @@
       };
 
       displayManager = lib.mkOption {
-        type = lib.types.enum [ "plasma-login-manager" "sddm" ];
-        default = "plasma-login-manager";
-        description = "Display manager service: 'plasma-login-manager' (plasmalogin matching host Aurora OS) or 'sddm' (standard fallback).";
+        type = lib.types.enum [ "sddm" ];
+        default = "sddm";
+        description = "Display manager service: 'sddm' (standard Wayland display manager for KDE Plasma 6).";
       };
     };
 
