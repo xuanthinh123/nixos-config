@@ -27,9 +27,12 @@ nixos_config/
 ├── flake.nix                          # Flake entry point (inputs, outputs, mkHost helper)
 ├── README.md                          # Comprehensive fleet operations manual
 ├── hosts/                             # Host profiles
-│   ├── default/                       # Minimal generic fleet baseline (iGPU / AMD / VM)
+│   ├── default/                       # Minimal generic fleet baseline (iGPU / AMD)
 │   │   ├── default.nix                # Host-level feature selections & defaults
 │   │   └── hardware-configuration.nix # Minimal ext4/UEFI storage definition
+│   ├── vm/                            # Dedicated Virtual Machine profile (QEMU/KVM, VirtualBox, VMware)
+│   │   ├── default.nix                # Disables dGPU/S3; enables qemu-guest & spice-vdagent
+│   │   └── hardware-configuration.nix # Storage & virtual controller definitions
 │   └── me/                            # Primary host profile (Acer Aspire A515-58GM)
 │       ├── default.nix                # Enables NVIDIA proprietary, S3 sleep, KDE, suites
 │       └── hardware-configuration.nix # Pure Linux Btrfs subvolumes & surveyed hardware
@@ -44,12 +47,12 @@ nixos_config/
 │   ├── hardware/                      # Hardware abstraction layer
 │   │   ├── default.nix                # Hardware module aggregator
 │   │   ├── nvidia.nix                 # Proprietary NVIDIA driver, PRIME offload/sync, unfree predicate
-│   │   ├── power.nix                  # ACPI S3 deep sleep enforcement (mem_sleep_default=deep)
+│   │   ├── power.nix                  # ACPI S3 deep sleep enforcement (mem_sleep_default=deep, extraConfig)
 │   │   └── filesystem.nix             # Pure Linux filesystem support (btrfs, ext4, xfs, zero NTFS)
 │   ├── desktop/                       # Graphical desktop environment
 │   │   ├── default.nix                # Desktop aggregator
 │   │   ├── kde.nix                    # KDE Plasma 6 Wayland session & PipeWire pro-audio stack
-│   │   └── display-manager.nix        # Display manager modularity (Plasma Login Manager & SDDM)
+│   │   └── display-manager.nix        # SDDM with Wayland greeter for KDE Plasma 6
 │   ├── services/                      # System services & containerization
 │   │   ├── default.nix                # Services aggregator
 │   │   ├── flatpak.nix                # Flatpak daemon & automated Flathub repo registration
@@ -61,11 +64,11 @@ nixos_config/
 │   │   ├── development.nix            # Dev toolchain (Git, Direnv, Mise, Rust, Python, compilers)
 │   │   ├── gaming.nix                 # Clean Steam & GameMode (zero legacy saves or wineprefixes)
 │   │   ├── gui-apps.nix               # Browsers, LibreOffice, KDE utilities, Discover store
-│   │   └── cli-tools.nix              # Modern CLI tools, nh search, nix-index, comma, starship
+│   │   └── cli-tools.nix              # Modern CLI tools, Ollama AI daemon, nh search, comma, starship
 │   └── home/                          # User space configuration via Home Manager
 │       ├── default.nix                # Home Manager module integration & user provisioning
 │       └── users/
-│           └── me.nix                 # User environment (shells, dotfiles, Git, Starship, Mise)
+│           └── me.nix                 # User environment (shells, dotfiles, Git, Starship, Mise, sessionPath)
 └── tests/                             # Multi-tier verification harness
     ├── verify-config.sh               # Syntax, AST, contract, and exclusion test suite
     └── run-distrobox-test.sh          # Containerized NixOS evaluation harness
@@ -174,6 +177,10 @@ If you installed NixOS freshly using the official KDE Plasma Graphical Installer
      # Copy the freshly generated hardware configuration:
      cp /etc/nixos.bak/hardware-configuration.nix /etc/nixos/hosts/me/hardware-configuration.nix
      ```
+   - **For a Virtual Machine (`vm`)**:
+     ```bash
+     cp /etc/nixos.bak/hardware-configuration.nix /etc/nixos/hosts/vm/hardware-configuration.nix
+     ```
    - **For any other machine in your fleet (`default`)**:
      ```bash
      cp /etc/nixos.bak/hardware-configuration.nix /etc/nixos/hosts/default/hardware-configuration.nix
@@ -189,6 +196,10 @@ If you installed NixOS freshly using the official KDE Plasma Graphical Installer
    - **For your primary laptop**:
      ```bash
      sudo nixos-rebuild switch --flake /etc/nixos#me
+     ```
+   - **For a Virtual Machine**:
+     ```bash
+     sudo nixos-rebuild switch --flake /etc/nixos#vm
      ```
    - **For any other machine in the fleet**:
      ```bash
@@ -206,6 +217,41 @@ If you installed NixOS freshly using the official KDE Plasma Graphical Installer
    reboot
    ```
    After rebooting, your system will be running the fully customized NixOS environment with proprietary NVIDIA drivers, S3 deep sleep, KDE Plasma 6 Wayland, Zen Browser, complete dev toolchains, and automated maintenance.
+
+### 3.5 Clean Reset & Re-installation Runbook (Wipe & Re-run)
+
+If you want to completely erase any previous attempt and start freshly from scratch on a virtual machine or physical PC:
+
+1. **Preserve machine-specific hardware configuration**:
+   ```bash
+   sudo cp /etc/nixos.bak/hardware-configuration.nix /tmp/hardware-configuration.nix 2>/dev/null || sudo cp /etc/nixos/hardware-configuration.nix /tmp/hardware-configuration.nix 2>/dev/null || sudo nixos-generate-config --show-hardware-config > /tmp/hardware-configuration.nix
+   ```
+
+2. **Purge old configuration directories**:
+   ```bash
+   sudo rm -rf /etc/nixos /etc/nixos.bak
+   ```
+
+3. **Clone the pristine repository from GitHub**:
+   ```bash
+   sudo git clone https://github.com/xuanthinh123/nixos-config.git /etc/nixos
+   ```
+
+4. **Restore hardware configuration into target host profile**:
+   ```bash
+   # For Virtual Machine (VM):
+   sudo cp /tmp/hardware-configuration.nix /etc/nixos/hosts/vm/hardware-configuration.nix
+
+   # Or for primary laptop:
+   # sudo cp /tmp/hardware-configuration.nix /etc/nixos/hosts/me/hardware-configuration.nix
+   ```
+
+5. **Stage and apply cleanly**:
+   ```bash
+   cd /etc/nixos
+   git add -A
+   sudo nixos-rebuild switch --flake /etc/nixos#vm
+   ```
 
 ---
 
@@ -327,6 +373,31 @@ flatpak uninstall --unused -y
 # Prune unused Podman/Docker container caches:
 podman system prune -af
 ```
+
+### 5.3 Local AI Ecosystem & Agent Workflows
+
+The system includes a pre-configured local LLM runtime powered by Ollama and dynamic binary compatibility for advanced multi-agent CLIs:
+
+#### 1. Background Ollama Daemon (`services.ollama.enable = true;`)
+The Ollama service starts automatically as a systemd background daemon (`ollama.service`). You can query lightweight, high-performance local AI models directly from your terminal at zero token cost:
+
+```bash
+# Qwen 2.5 (1.5B) - Recommended: High Vietnamese & multilingual fluency, fast reasoning:
+ollama run qwen2.5:1.5b
+
+# Llama 3.2 (1B) - Instantaneous responses for text transformation & classification:
+ollama run llama3.2:1b
+
+# DeepSeek R1 (1.5B) - Chain-of-thought logic reasoning and traceback analysis:
+ollama run deepseek-r1:1.5b
+```
+
+#### 2. Pre-Compiled Multi-Agent CLIs via `nix-ld`
+Dynamically-linked external AI tools (such as Google Antigravity `agy`, xAI Grok `grok`, and `opencode`) are fully supported out-of-the-box via `programs.nix-ld` and pre-configured in `home.sessionPath` (`~/.local/bin`, `~/.grok/bin`, `~/.opencode/bin`).
+To migrate your existing agent sessions and credentials from your current machine to a new NixOS installation, simply copy:
+- `~/.local/bin/agy` & `~/.gemini/` (Antigravity CLI & sessions)
+- `~/.grok/` (Grok CLI, configs, and credentials)
+- `~/.opencode/` (OpenCode CLI)
 
 ---
 
