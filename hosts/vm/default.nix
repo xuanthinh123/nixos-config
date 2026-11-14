@@ -52,4 +52,7 @@
   # Virtual machine guest integrations
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
+
+  # Pinned state version
+  system.stateVersion = "24.11";
 }

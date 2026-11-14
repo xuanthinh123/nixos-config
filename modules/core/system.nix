@@ -62,4 +62,10 @@
     "vm.watermark_scale_factor" = 125;
     "vm.page-cluster" = 0;
   };
+
+  # Disable legacy channel-based command-not-found to prevent conflict with nix-index
+  programs.command-not-found.enable = false;
+
+  # Standard baseline system state version
+  system.stateVersion = lib.mkDefault "24.11";
 }

@@ -22,6 +22,9 @@ in
       enable = true;
     };
 
+    # Disable legacy command-not-found to avoid conflict with nix-index
+    programs.command-not-found.enable = false;
+
     # Real-time nix-index database for rapid package searching and command-not-found integration
     programs.nix-index.enable = true;
 
