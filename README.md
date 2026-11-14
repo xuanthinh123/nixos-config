@@ -263,6 +263,14 @@ distrobox enter ubuntu-dev
 ### 6.4 Precompiled FHS Binaries (`nix-ld`)
 Precompiled binaries (e.g. custom VS Code server extensions, downloaded Go/Rust/C executables) work out of the box through `/lib64/ld-linux-x86-64.so.2` emulation backed by common shared C libraries.
 
+### 6.5 Custom Proprietary Fonts Synchronization
+While standard developer Nerd Fonts (JetBrainsMono, FiraCode, CascadiaCode, SourceCodePro, etc.) and international Noto fonts are declaratively provisioned in `modules/desktop/kde.nix`, the proprietary Microsoft & specialized UI fonts (~45 MB) are maintained in a dedicated lightweight repository:
+```bash
+git clone https://github.com/xuanthinh123/custom-fonts.git ~/.local/share/fonts/custom-fonts
+fc-cache -f ~/.local/share/fonts
+```
+Home Manager automatically indexes this user font directory via `fonts.fontconfig.enable = true;`.
+
 ---
 
 ## 7. Rollback & Emergency Recovery
