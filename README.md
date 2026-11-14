@@ -283,6 +283,50 @@ custom.maintenance = {
 };
 ```
 
+### 5.1 Automated Self-Maintenance Pipeline
+The system automatically executes scheduled maintenance tasks in the background:
+- **Daily at 04:00 AM**: Automatic flake update & system rebuild (`system.autoUpgrade`) with 45-minute jitter to protect network mirrors.
+- **Weekly**: Automated garbage collection purging system generations older than 14 days (`nix.gc`).
+- **Real-time Deduplication**: Hardlink deduplication (`auto-optimise-store = true`) saving gigabytes of disk space.
+- **Emergency Protection**: Automatic emergency GC trigger if free root disk space drops below 3 GiB, reclaiming up to 10 GiB.
+
+### 5.2 Manual Garbage & Disk Space Cleaning Runbook
+
+Whenever you want to immediately purge old generations and reclaim disk space:
+
+#### Method 1: Visual & Interactive Cleaning with `nh` (Fastest & Recommended)
+The pre-installed `nh` tool displays interactive summaries and confirmation prompts:
+```bash
+# Clean both system and user generations, keeping the 3 most recent:
+nh clean all --keep 3
+
+# Or clean generations older than 7 days:
+nh clean all --keep-since 7d
+```
+
+#### Method 2: Traditional Nix Deep Clean
+```bash
+# 1. Delete all old generations for both root and user profiles (keeps only active generation):
+sudo nix-collect-garbage -d
+nix-collect-garbage -d
+
+# 2. Re-deduplicate identical binaries and libraries in /nix/store:
+sudo nix-store --optimise
+
+# 3. Refresh bootloader entries in systemd-boot:
+sudo /run/current-system/bin/switch-to-configuration boot
+```
+
+#### Method 3: Cleaning Flatpak & Container Disk Caches
+If you frequently test applications from Flathub or run local containers:
+```bash
+# Prune orphaned Flatpak runtimes:
+flatpak uninstall --unused -y
+
+# Prune unused Podman/Docker container caches:
+podman system prune -af
+```
+
 ---
 
 ## 6. Tiered Software Ecosystem & App Store
