@@ -26,7 +26,26 @@ in
 
     # Flatpak permission management GUI and KDE System Settings module
     environment.systemPackages = with pkgs; [
-      flatseal
+      # Flatseal launcher (matching surveyed Flatpak com.github.tchx84.Flatseal)
+      (pkgs.writeShellScriptBin "flatseal" ''
+        # Priority 1: Check for native Nix binary first
+        if [ -x "$(command -v flatseal 2>/dev/null)" ] && [ "$(command -v flatseal)" != "$0" ]; then
+          exec flatseal "$@"
+        fi
+
+        # Priority 2: Fallback to Flatpak Flathub if native Nix package is not installed
+        if command -v flatpak >/dev/null 2>&1; then
+          if ! flatpak info com.github.tchx84.Flatseal >/dev/null 2>&1; then
+            echo "Native Nix package not found. Installing Flatseal from Flathub fallback..."
+            flatpak install -y flathub com.github.tchx84.Flatseal
+          fi
+          exec flatpak run com.github.tchx84.Flatseal "$@"
+        else
+          echo "Error: Neither native Nix Flatseal nor Flatpak is available." >&2
+          exit 1
+        fi
+      '')
+
       kdePackages.flatpak-kcm
     ];
   };

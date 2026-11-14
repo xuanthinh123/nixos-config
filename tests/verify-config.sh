@@ -215,10 +215,11 @@ fi
 if grep -Fq "kdePackages.discover" "${CONFIG_DIR}/modules/suites/gui-apps.nix" && \
    grep -Fq "libreoffice-qt6-still" "${CONFIG_DIR}/modules/suites/gui-apps.nix" && \
    grep -Fq "services.flatpak.enable" "${CONFIG_DIR}/modules/services/flatpak.nix" && \
+   grep -Fq 'writeShellScriptBin "flatseal"' "${CONFIG_DIR}/modules/services/flatpak.nix" && \
    grep -Fq "programs.nh" "${CONFIG_DIR}/modules/suites/cli-tools.nix" && \
    grep -Fq "programs.nix-index" "${CONFIG_DIR}/modules/suites/cli-tools.nix" && \
    grep -Fq "comma" "${CONFIG_DIR}/modules/suites/cli-tools.nix"; then
-  pass "Tiered software & discovery verified (Discover + Flatpak, LibreOffice still LTS, nh search, nix-index, comma)."
+  pass "Tiered software & discovery verified (Discover + Flatpak + Flatseal wrapper, LibreOffice still LTS, nh search, nix-index, comma)."
 else
   fail "Tiered software or discovery tools missing in suites or services!"
 fi
