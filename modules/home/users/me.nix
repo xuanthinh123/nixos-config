@@ -11,6 +11,14 @@
   # Home Manager state version
   home.stateVersion = "24.11";
 
+  # User binary search paths ensuring Antigravity (agy), Grok, OpenCode, and local CLI tools are globally in PATH
+  home.sessionPath = [
+    "$HOME/.local/bin"
+    "$HOME/.grok/bin"
+    "$HOME/.opencode/bin"
+    "$HOME/.gemini/antigravity-cli/bin"
+  ];
+
   # Global user environment variables matching surveyed Aurora OS environment
   home.sessionVariables = {
     # Compilation parallelization tuned for the 12-core Intel i5-13420H
