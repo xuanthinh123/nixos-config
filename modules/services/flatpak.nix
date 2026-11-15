@@ -24,12 +24,16 @@ in
       };
     };
 
-    # Automated batch declarative Flatpak application installation
+    # Automated one-time batch declarative Flatpak application installation on initial setup
     systemd.services.install-flatpaks = {
-      description = "Batch install declarative Flatpak applications";
+      description = "One-time initial batch installation of Flatpak applications";
       wantedBy = [ "multi-user.target" ];
       after = [ "network-online.target" "configure-flathub.service" ];
       wants = [ "network-online.target" ];
+      unitConfig = {
+        # Only executes once on first install; completely skipped on subsequent boots
+        ConditionPathExists = "!/var/lib/flatpak/.initial-flatpaks-installed";
+      };
       serviceConfig = {
         Type = "oneshot";
         ExecStart = pkgs.writeShellScript "install-flatpaks-batch" ''
@@ -40,6 +44,8 @@ in
               ${pkgs.flatpak}/bin/flatpak install -y --noninteractive flathub "$pkg" || true
             fi
           done
+          mkdir -p /var/lib/flatpak
+          touch /var/lib/flatpak/.initial-flatpaks-installed
         '';
         RemainAfterExit = true;
       };
