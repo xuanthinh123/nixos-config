@@ -206,13 +206,19 @@ If you installed NixOS freshly using the official KDE Plasma Graphical Installer
      sudo nixos-rebuild switch --flake /etc/nixos#default
      ```
 
-6. **Sync Custom Proprietary Fonts**:
+6. **(Optional) Batch Install Flatpak Applications**:
+   To immediately pre-install all external Flatpak applications (Zen Browser, Simplenote, Flatseal) in one single command:
+   ```bash
+   flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo && flatpak install -y flathub app.zen_browser.zen com.simplenote.Simplenote com.github.tchx84.Flatseal
+   ```
+
+7. **Sync Custom Proprietary Fonts**:
    ```bash
    git clone https://github.com/xuanthinh123/custom-fonts.git ~/.local/share/fonts/custom-fonts
    fc-cache -f ~/.local/share/fonts
    ```
 
-7. **Reboot**:
+8. **Reboot**:
    ```bash
    reboot
    ```
