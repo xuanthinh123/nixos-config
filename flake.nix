@@ -48,8 +48,22 @@
     # Generic fleet baseline configuration for rapid deployment to new PCs / VMs
     nixosConfigurations.default = mkHost { hostName = "default"; };
 
-    # Dedicated Virtual Machine configuration (QEMU/KVM, VirtualBox, VMware)
+    # Dedicated Virtual Machine configuration (BIOS / MBR)
     nixosConfigurations.vm = mkHost { hostName = "vm"; };
+
+    # Dedicated Virtual Machine configuration for modern UEFI (OVMF)
+    nixosConfigurations."vm-uefi" = mkHost {
+      hostName = "vm";
+      hostModules = [
+        {
+          boot.loader = {
+            systemd-boot.enable = nixpkgs.lib.mkForce true;
+            grub.enable = nixpkgs.lib.mkForce false;
+            efi.canTouchEfiVariables = nixpkgs.lib.mkForce true;
+          };
+        }
+      ];
+    };
 
     # Primary user machine configuration (Acer Aspire A515-58GM with Intel + NVIDIA RTX 2050)
     nixosConfigurations.me = mkHost { hostName = "me"; };

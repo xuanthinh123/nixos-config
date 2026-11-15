@@ -1,13 +1,25 @@
 # hosts/vm/default.nix
 # Dedicated host profile optimized for Virtual Machines (QEMU/KVM, VirtualBox, VMware).
 # Disables proprietary dGPU drivers and physical laptop S3 sleep; adds VM guest integration.
+# Defaulted to GRUB for legacy BIOS/MBR virtual disks; use #vm-uefi for UEFI virtual machines.
 
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
   ];
+
+  # Bootloader configuration for legacy BIOS / MBR Virtual Machines
+  boot.loader = {
+    systemd-boot.enable = lib.mkForce false;
+    efi.canTouchEfiVariables = lib.mkForce false;
+    grub = {
+      enable = lib.mkForce true;
+      # Default target disk for MBR (can be overridden by hardware-configuration.nix)
+      device = lib.mkDefault "/dev/sda";
+    };
+  };
 
   custom = {
     device = {
