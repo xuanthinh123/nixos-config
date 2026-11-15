@@ -45,27 +45,13 @@
       };
   in
   {
-    # Generic fleet baseline configuration for rapid deployment to new PCs / VMs
+    # Generic fleet baseline configuration for rapid deployment to new PCs / VMs (UEFI)
     nixosConfigurations.default = mkHost { hostName = "default"; };
 
-    # Dedicated Virtual Machine configuration (BIOS / MBR)
+    # Dedicated Virtual Machine configuration (pure modern UEFI)
     nixosConfigurations.vm = mkHost { hostName = "vm"; };
 
-    # Dedicated Virtual Machine configuration for modern UEFI (OVMF)
-    nixosConfigurations."vm-uefi" = mkHost {
-      hostName = "vm";
-      hostModules = [
-        {
-          boot.loader = {
-            systemd-boot.enable = nixpkgs.lib.mkForce true;
-            grub.enable = nixpkgs.lib.mkForce false;
-            efi.canTouchEfiVariables = nixpkgs.lib.mkForce true;
-          };
-        }
-      ];
-    };
-
-    # Primary user machine configuration (Acer Aspire A515-58GM with Intel + NVIDIA RTX 2050)
+    # Primary user machine configuration (Acer Aspire A515-58GM with Intel + NVIDIA RTX 2050, UEFI)
     nixosConfigurations.me = mkHost { hostName = "me"; };
   };
 }

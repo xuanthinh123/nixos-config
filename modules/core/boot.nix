@@ -11,7 +11,12 @@
 
     loader = {
       # Lightweight, pure Linux UEFI systemd-boot bootloader
-      systemd-boot = { enable = true; configurationLimit = 10; consoleMode = "max"; editor = false; };
+      systemd-boot = {
+        enable = lib.mkDefault true;
+        configurationLimit = 10;
+        consoleMode = "max";
+        editor = false;
+      };
 
       efi = {
         canTouchEfiVariables = true;
@@ -19,7 +24,7 @@
       };
 
       # Strictly disable GRUB to prevent legacy dual-boot scanning
-      grub.enable = false;
+      grub.enable = lib.mkDefault false;
     };
 
     # Pure Linux kernel parameters
