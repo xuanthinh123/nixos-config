@@ -14,12 +14,15 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = lib.mkDefault "/dev/disk/by-label/nixos";
+    device = "/dev/disk/by-label/nixos";
     fsType = "ext4";
   };
 
-  # BIOS/MBR virtual machines do not use a separate EFI /boot partition.
-  # If running in UEFI mode, define fileSystems."/boot" with the appropriate EFI partition.
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/boot";
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
+  };
 
   swapDevices = [ ];
 
