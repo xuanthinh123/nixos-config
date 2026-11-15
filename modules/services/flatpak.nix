@@ -1,5 +1,5 @@
 # modules/services/flatpak.nix
-# Configuration for Flatpak daemon and automatic Flathub remote repository registration.
+# Configuration for Flatpak daemon, Flathub remote, and automated declarative batch application installation.
 
 { config, lib, pkgs, ... }:
 
@@ -20,6 +20,27 @@ in
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo";
+        RemainAfterExit = true;
+      };
+    };
+
+    # Automated batch declarative Flatpak application installation
+    systemd.services.install-flatpaks = {
+      description = "Batch install declarative Flatpak applications";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network-online.target" "configure-flathub.service" ];
+      wants = [ "network-online.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = pkgs.writeShellScript "install-flatpaks-batch" ''
+          ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          for pkg in app.zen_browser.zen com.simplenote.Simplenote com.github.tchx84.Flatseal; do
+            if ! ${pkgs.flatpak}/bin/flatpak info "$pkg" >/dev/null 2>&1; then
+              echo "Installing Flatpak package: $pkg..."
+              ${pkgs.flatpak}/bin/flatpak install -y --noninteractive flathub "$pkg" || true
+            fi
+          done
+        '';
         RemainAfterExit = true;
       };
     };
