@@ -218,11 +218,17 @@ If you installed NixOS freshly using the official KDE Plasma Graphical Installer
    fc-cache -f ~/.local/share/fonts
    ```
 
-8. **Reboot**:
+8. **Batch Pull Local AI Models (Ollama)**:
+   Pre-download the complete lightweight, offline local AI suite (multilingual Qwen, high-speed Llama, and reasoning DeepSeek):
+   ```bash
+   ollama pull qwen2.5:1.5b && ollama pull llama3.2:1b && ollama pull deepseek-r1:1.5b
+   ```
+
+9. **Reboot**:
    ```bash
    reboot
    ```
-   After rebooting, your system will be running the fully customized NixOS environment with proprietary NVIDIA drivers, S3 deep sleep, KDE Plasma 6 Wayland, Zen Browser, complete dev toolchains, and automated maintenance.
+   After rebooting, your system will be running the fully customized NixOS environment with proprietary NVIDIA drivers, S3 deep sleep, KDE Plasma 6 Wayland, Zen Browser, complete dev toolchains, custom Microsoft fonts, offline local AI models, and automated maintenance.
 
 ### 3.5 Clean Reset & Re-installation Runbook (Wipe & Re-run)
 
@@ -388,6 +394,9 @@ The system includes a pre-configured local LLM runtime powered by Ollama and dyn
 The Ollama service starts automatically as a systemd background daemon (`ollama.service`). You can query lightweight, high-performance local AI models directly from your terminal at zero token cost:
 
 ```bash
+# Batch pull all recommended local models in one single command:
+ollama pull qwen2.5:1.5b && ollama pull llama3.2:1b && ollama pull deepseek-r1:1.5b
+
 # Qwen 2.5 (1.5B) - Recommended: High Vietnamese & multilingual fluency, fast reasoning:
 ollama run qwen2.5:1.5b
 
